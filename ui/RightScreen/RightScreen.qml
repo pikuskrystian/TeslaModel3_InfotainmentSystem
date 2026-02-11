@@ -79,6 +79,5 @@ Rectangle{
            }
            fillMode: Image.PreserveAspectFit
 
-           onStatusChanged: console.log("LOCK:", status, source)
        }
 }
