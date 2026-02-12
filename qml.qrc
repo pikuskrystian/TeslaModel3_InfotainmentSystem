@@ -6,5 +6,8 @@
         <file>ui/LeftScreen/LeftScreen.qml</file>
         <file>ui/assets/tesla_model_3.glb</file>
         <file>ui/assets/open_locker.png</file>
+        <file>ui/assets/electric-car.png</file>
+        <file>ui/assets/defrostBack.png</file>
+        <file>ui/assets/defrostFront.png</file>
     </qresource>
 </RCC>
