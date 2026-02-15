@@ -9,5 +9,6 @@
         <file>ui/assets/electric-car.png</file>
         <file>ui/assets/defrostBack.png</file>
         <file>ui/assets/defrostFront.png</file>
+        <file>ui/BottomBar/TempIndicator.qml</file>
     </qresource>
 </RCC>
