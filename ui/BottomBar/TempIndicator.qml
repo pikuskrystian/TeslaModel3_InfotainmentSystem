@@ -3,8 +3,8 @@ import QtQuick.Controls 2.15
 
 Item {
     id: root
-    width: 120
-    height: 120
+    width: 64
+    height: 64
 
     property int temperature: 68
     property int minTemperature: 15
@@ -30,12 +30,12 @@ Item {
 
     Column {
         anchors.centerIn: parent
-        spacing: 8
+        spacing: 2
 
         // Strzałka w górę – zwiększanie
         Item {
-            width: 24
-            height: 24
+            width: 12
+            height: 12
             anchors.horizontalCenter: parent.horizontalCenter
 
             Canvas {
@@ -64,7 +64,7 @@ Item {
         Text {
             text: root.temperature + "°"
             color: root.textColor
-            font.pixelSize: 34
+            font.pixelSize: Math.max(12, Math.min(28, root.height / 2.2))
             font.bold: true
             horizontalAlignment: Text.AlignHCenter
             anchors.horizontalCenter: parent.horizontalCenter
@@ -72,8 +72,8 @@ Item {
 
         // Strzałka w dół – zmniejszanie
         Item {
-            width: 24
-            height: 24
+            width: 12
+            height: 12
             anchors.horizontalCenter: parent.horizontalCenter
 
             Canvas {

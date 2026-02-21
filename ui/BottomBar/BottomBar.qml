@@ -52,11 +52,10 @@ Rectangle {
     TempIndicator {
         id: tempIndicator
         anchors {
-            left: defrostFrontIcon.right
+            horizontalCenter: parent.horizontalCenter
             verticalCenter: parent.verticalCenter
-            leftMargin: parent.height * 0.5
         }
-        width: parent.height * 1.2
+        width: parent.height * 0.9
         height: width
         temperature: 22
     }
