@@ -229,7 +229,7 @@ Rectangle {
 
             // Play / Pause
             Rectangle {
-                width: 44; height: 44; radius: 22
+                width: 45; height: 45; radius: 22
                 color: "#4caf50"
                 Text {
                     anchors.centerIn: parent
