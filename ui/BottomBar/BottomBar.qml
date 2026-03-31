@@ -3,113 +3,42 @@ import QtQuick.Controls 2.15
 
 Rectangle {
     id: bottomBar
-    anchors {
-        left: parent.left
-        right: parent.right
-        bottom: parent.bottom
-    }
+    anchors { left: parent.left; right: parent.right; bottom: parent.bottom }
     height: parent.height / 10
     color: "#111111"
 
-    // thin top separator
-    Rectangle {
-        anchors { top: parent.top; left: parent.left; right: parent.right }
-        height: 1
-        color: "#2a2a2a"
-    }
+    Rectangle { anchors { top: parent.top; left: parent.left; right: parent.right } height: 1; color: "#2a2a2a" }
 
-    // ── state ─────────────────────────────────────────────────────────
-    property bool locked:        false
-    property bool hvacOn:        true
-    property bool defrostFront:  false
-    property bool defrostBack:   false
-    property bool seatHeatL:     false
+    // ── state ──────────────────────────────────────────────────────────
+    property bool carActive:    false
+    property bool defrostFront: false
+    property bool defrostBack:  false
+    property bool seatHeatL:    false
+    property bool seatHeatR:    false
+    property bool hvacOn:       true
     property int  tempDriver:    20
     property int  tempPassenger: 20
-    property bool isManual:      true
-    property bool mediaPlaying:  false
-    property int  volume:        15
-    property int  minTemp:       15
-    property int  maxTemp:       30
+    property bool isManual:     true
+    property bool musicActive:  false
+    property bool phoneActive:  false
+    property real volume:       0.5
+    property int  minTemp:      15
+    property int  maxTemp:      30
 
     function clampTemp(v) { return Math.max(minTemp, Math.min(maxTemp, v)) }
+    readonly property real iconSize: height * 0.46
 
-    readonly property real btnSize: height * 0.70
-
-    // ══════════════════════════════════════════════════════════════════
-    // LEFT GROUP — lock | hvac | defrost front | defrost back | seat heat
-    // ══════════════════════════════════════════════════════════════════
-    Row {
-        id: leftGroup
-        anchors { left: parent.left; verticalCenter: parent.verticalCenter; leftMargin: 14 }
-        spacing: 6
-
-        // Lock
-        Rectangle {
-            width: bottomBar.btnSize; height: width; radius: 6
-            color: bottomBar.locked ? "#ffffff22" : "transparent"
-            border.color: bottomBar.locked ? "white" : "transparent"; border.width: 1
-            Text { anchors.centerIn: parent; text: bottomBar.locked ? "🔒" : "🔓"; font.pixelSize: parent.height * 0.44; color: "#aaa" }
-            MouseArea { anchors.fill: parent; onClicked: bottomBar.locked = !bottomBar.locked }
-        }
-
-        // HVAC
-        Rectangle {
-            width: bottomBar.btnSize; height: width; radius: 6
-            color: bottomBar.hvacOn ? "#1565c033" : "transparent"
-            border.color: bottomBar.hvacOn ? "#42a5f5" : "transparent"; border.width: 1
-            Text { anchors.centerIn: parent; text: "❄"; font.pixelSize: parent.height * 0.44; color: bottomBar.hvacOn ? "#42a5f5" : "#aaa" }
-            MouseArea { anchors.fill: parent; onClicked: bottomBar.hvacOn = !bottomBar.hvacOn }
-        }
-
-        // Defrost front
-        Rectangle {
-            width: bottomBar.btnSize; height: width; radius: 6
-            color: bottomBar.defrostFront ? "#e6510033" : "transparent"
-            border.color: bottomBar.defrostFront ? "#ff9800" : "transparent"; border.width: 1
-            Image {
-                anchors.centerIn: parent
-                source: "qrc:/ui/assets/defrostFront.png"
-                width: parent.width * 0.65; height: parent.height * 0.65
-                fillMode: Image.PreserveAspectFit
-                opacity: bottomBar.defrostFront ? 1.0 : 0.4
-            }
-            MouseArea { anchors.fill: parent; onClicked: bottomBar.defrostFront = !bottomBar.defrostFront }
-        }
-
-        // Defrost back
-        Rectangle {
-            width: bottomBar.btnSize; height: width; radius: 6
-            color: bottomBar.defrostBack ? "#e6510033" : "transparent"
-            border.color: bottomBar.defrostBack ? "#ff9800" : "transparent"; border.width: 1
-            Image {
-                anchors.centerIn: parent
-                source: "qrc:/ui/assets/defrostBack.png"
-                width: parent.width * 0.65; height: parent.height * 0.65
-                fillMode: Image.PreserveAspectFit
-                opacity: bottomBar.defrostBack ? 1.0 : 0.4
-            }
-            MouseArea { anchors.fill: parent; onClicked: bottomBar.defrostBack = !bottomBar.defrostBack }
-        }
-
-        // Seat heat
-        Rectangle {
-            width: bottomBar.btnSize; height: width; radius: 6
-            color: bottomBar.seatHeatL ? "#b71c1c33" : "transparent"
-            border.color: bottomBar.seatHeatL ? "#ef5350" : "transparent"; border.width: 1
-            Text { anchors.centerIn: parent; text: "🪑"; font.pixelSize: parent.height * 0.44; color: bottomBar.seatHeatL ? "#ef5350" : "#aaa" }
-            MouseArea { anchors.fill: parent; onClicked: bottomBar.seatHeatL = !bottomBar.seatHeatL }
-        }
-    }
+    // ── helper: one icon button ────────────────────────────────────────
+    // used inline below as Rectangle with Image inside
 
     // ══════════════════════════════════════════════════════════════════
-    // CENTRE — driver temp | MANUAL/AUTO | passenger temp
+    // CENTRE — anchored first so left/right can reference it
     // ══════════════════════════════════════════════════════════════════
     Row {
+        id: centreGroup
         anchors.centerIn: parent
         spacing: 14
 
-        // Driver temp
         TempIndicator {
             width: bottomBar.height * 0.82; height: width
             temperature: bottomBar.tempDriver
@@ -117,7 +46,6 @@ Rectangle {
             onDecrease: bottomBar.tempDriver = bottomBar.clampTemp(bottomBar.tempDriver - 1)
         }
 
-        // MANUAL / AUTO
         Column {
             anchors.verticalCenter: parent.verticalCenter
             spacing: 2
@@ -134,7 +62,6 @@ Rectangle {
             }
         }
 
-        // Passenger temp
         TempIndicator {
             width: bottomBar.height * 0.82; height: width
             temperature: bottomBar.tempPassenger
@@ -144,68 +71,165 @@ Rectangle {
     }
 
     // ══════════════════════════════════════════════════════════════════
-    // RIGHT GROUP — media controls | phone | volume
+    // LEFT PANEL — fills space between left edge and centre
+    // 4 buttons spread evenly
     // ══════════════════════════════════════════════════════════════════
-    Row {
-        id: rightGroup
-        anchors { right: volumeBar.left; verticalCenter: parent.verticalCenter; rightMargin: 10 }
-        spacing: 6
+    Item {
+        id: leftPanel
+        anchors {
+            left: parent.left
+            right: centreGroup.left
+            top: parent.top; bottom: parent.bottom
+        }
 
-        // Prev
-        Rectangle {
-            width: bottomBar.btnSize; height: width; radius: 6; color: "transparent"
-            Text { anchors.centerIn: parent; text: "⏮"; font.pixelSize: parent.height * 0.44; color: "#aaa" }
-            MouseArea { anchors.fill: parent }
-        }
-        // Play/Pause
-        Rectangle {
-            width: bottomBar.btnSize; height: width; radius: 6
-            color: bottomBar.mediaPlaying ? "#ffffff15" : "transparent"
-            border.color: bottomBar.mediaPlaying ? "#888" : "transparent"; border.width: 1
-            Text { anchors.centerIn: parent; text: bottomBar.mediaPlaying ? "⏸" : "▶"; font.pixelSize: parent.height * 0.44; color: "#ccc" }
-            MouseArea { anchors.fill: parent; onClicked: bottomBar.mediaPlaying = !bottomBar.mediaPlaying }
-        }
-        // Next
-        Rectangle {
-            width: bottomBar.btnSize; height: width; radius: 6; color: "transparent"
-            Text { anchors.centerIn: parent; text: "⏭"; font.pixelSize: parent.height * 0.44; color: "#aaa" }
-            MouseArea { anchors.fill: parent }
-        }
-        // Phone
-        Rectangle {
-            width: bottomBar.btnSize; height: width; radius: 6; color: "transparent"
-            Text { anchors.centerIn: parent; text: "📞"; font.pixelSize: parent.height * 0.44; color: "#aaa" }
-            MouseArea { anchors.fill: parent }
-        }
-        // Vol down
-        Rectangle {
-            width: bottomBar.btnSize; height: width; radius: 6; color: "transparent"
-            Text { anchors.centerIn: parent; text: "🔉"; font.pixelSize: parent.height * 0.44; color: "#aaa" }
-            MouseArea { anchors.fill: parent; onClicked: bottomBar.volume = Math.max(0, bottomBar.volume - 1) }
-        }
-        // Vol up
-        Rectangle {
-            width: bottomBar.btnSize; height: width; radius: 6; color: "transparent"
-            Text { anchors.centerIn: parent; text: "🔊"; font.pixelSize: parent.height * 0.44; color: "#aaa" }
-            MouseArea { anchors.fill: parent; onClicked: bottomBar.volume = Math.min(30, bottomBar.volume + 1) }
+        // We place 4 buttons by dividing leftPanel into 4 equal slots
+        Repeater {
+            model: [
+                { src: "qrc:/ui/assets/car_icon.png",              prop: "carActive",    activeColor: "#ffffff" },
+                { src: "qrc:/ui/assets/windshield_defrost.png",     prop: "defrostFront", activeColor: "#ff9800" },
+                { src: "qrc:/ui/assets/windshield_defrost_rear.png",prop: "defrostBack",  activeColor: "#ff9800" },
+                { src: "qrc:/ui/assets/seat_heat_left.png",         prop: "seatHeatL",    activeColor: "#ef5350" }
+            ]
+
+            delegate: Item {
+                x: (index + 0.5) * (leftPanel.width / 4) - width / 2
+                anchors.verticalCenter: parent.verticalCenter
+                width: bottomBar.height * 0.78
+                height: width
+
+                Rectangle {
+                    anchors.fill: parent; radius: 6
+                    color: bottomBar[modelData.prop] ? Qt.rgba(
+                               Qt.color(modelData.activeColor).r,
+                               Qt.color(modelData.activeColor).g,
+                               Qt.color(modelData.activeColor).b, 0.15) : "transparent"
+                    border.color: bottomBar[modelData.prop] ? modelData.activeColor : "transparent"
+                    border.width: 1
+                    Behavior on color { ColorAnimation { duration: 150 } }
+                }
+                Image {
+                    anchors.centerIn: parent
+                    width: bottomBar.iconSize; height: bottomBar.iconSize
+                    source: modelData.src
+                    fillMode: Image.PreserveAspectFit
+                    opacity: bottomBar[modelData.prop] ? 1.0 : 0.5
+                    Behavior on opacity { NumberAnimation { duration: 150 } }
+                }
+                MouseArea {
+                    anchors.fill: parent
+                    onClicked: bottomBar[modelData.prop] = !bottomBar[modelData.prop]
+                }
+            }
         }
     }
 
-    // ── volume bar visualiser ─────────────────────────────────────────
-    Row {
-        id: volumeBar
-        anchors { right: parent.right; verticalCenter: parent.verticalCenter; rightMargin: 12 }
-        spacing: 3
+    // ══════════════════════════════════════════════════════════════════
+    // RIGHT PANEL — fills space between centre and right edge
+    // seat_heat_right | music_note | mobile_2 | volume icon + slider
+    // ══════════════════════════════════════════════════════════════════
+    Item {
+        id: rightPanel
+        anchors {
+            left: centreGroup.right
+            right: parent.right
+            top: parent.top; bottom: parent.bottom
+        }
 
+        // 3 icon buttons spread across first 3 slots
         Repeater {
-            model: 10
-            Rectangle {
-                width: 3
-                height: bottomBar.height * (0.18 + index * 0.055)
+            model: [
+                { src: "qrc:/ui/assets/seat_heat_right.png", prop: "seatHeatR",   activeColor: "#ef5350" },
+                { src: "qrc:/ui/assets/music_note.png",       prop: "musicActive", activeColor: "#42a5f5" },
+                { src: "qrc:/ui/assets/mobile_2.png",         prop: "phoneActive", activeColor: "#42a5f5" }
+            ]
+
+            delegate: Item {
+                // slots: 0, 1, 2 out of 4 total slots in rightPanel
+                x: (index + 0.5) * (rightPanel.width / 4) - width / 2
                 anchors.verticalCenter: parent.verticalCenter
-                radius: 1
-                color: index < Math.round(bottomBar.volume / 3) ? "#4caf50" : "#2a2a2a"
-                Behavior on color { ColorAnimation { duration: 150 } }
+                width: bottomBar.height * 0.78
+                height: width
+
+                Rectangle {
+                    anchors.fill: parent; radius: 6
+                    color: bottomBar[modelData.prop] ? Qt.rgba(
+                               Qt.color(modelData.activeColor).r,
+                               Qt.color(modelData.activeColor).g,
+                               Qt.color(modelData.activeColor).b, 0.15) : "transparent"
+                    border.color: bottomBar[modelData.prop] ? modelData.activeColor : "transparent"
+                    border.width: 1
+                    Behavior on color { ColorAnimation { duration: 150 } }
+                }
+                Image {
+                    anchors.centerIn: parent
+                    width: bottomBar.iconSize; height: bottomBar.iconSize
+                    source: modelData.src
+                    fillMode: Image.PreserveAspectFit
+                    opacity: bottomBar[modelData.prop] ? 1.0 : 0.5
+                    Behavior on opacity { NumberAnimation { duration: 150 } }
+                }
+                MouseArea {
+                    anchors.fill: parent
+                    onClicked: bottomBar[modelData.prop] = !bottomBar[modelData.prop]
+                }
+            }
+        }
+
+        // Volume — occupies slot 3 (last quarter of rightPanel)
+        Item {
+            x: 3 * (rightPanel.width / 4)
+            width: rightPanel.width / 4
+            anchors { top: parent.top; bottom: parent.bottom }
+
+            Row {
+                anchors.centerIn: parent
+                spacing: 6
+
+                // volume icon — mute toggle
+                Image {
+                    anchors.verticalCenter: parent.verticalCenter
+                    width: bottomBar.iconSize; height: bottomBar.iconSize
+                    fillMode: Image.PreserveAspectFit
+                    source: bottomBar.volume <= 0   ? "qrc:/ui/assets/volume_off_24dp.png"
+                          : bottomBar.volume < 0.35 ? "qrc:/ui/assets/volume_mute_24dp.png"
+                          : bottomBar.volume < 0.65 ? "qrc:/ui/assets/volume_down_24dp.png"
+                                                    : "qrc:/ui/assets/volume_up_24dp.png"
+                    MouseArea {
+                        anchors.fill: parent
+                        onClicked: bottomBar.volume = bottomBar.volume > 0 ? 0 : 0.5
+                    }
+                }
+
+                // slider
+                Item {
+                    width: 70; height: 20
+                    anchors.verticalCenter: parent.verticalCenter
+
+                    Rectangle {
+                        anchors { left: parent.left; right: parent.right; verticalCenter: parent.verticalCenter }
+                        height: 3; radius: 2; color: "#2a2a2a"
+
+                        Rectangle {
+                            anchors { left: parent.left; top: parent.top; bottom: parent.bottom }
+                            width: parent.width * bottomBar.volume
+                            radius: 2; color: "#4caf50"
+                            Behavior on width { NumberAnimation { duration: 100 } }
+                        }
+                    }
+
+                    Rectangle {
+                        x: (parent.width - width) * bottomBar.volume
+                        anchors.verticalCenter: parent.verticalCenter
+                        width: 11; height: 11; radius: 6; color: "white"
+                        Behavior on x { NumberAnimation { duration: 100 } }
+                    }
+
+                    MouseArea {
+                        anchors.fill: parent
+                        onClicked:         (mouse) => bottomBar.volume = Math.max(0, Math.min(1, mouse.x / width))
+                        onPositionChanged: (mouse) => { if (pressed) bottomBar.volume = Math.max(0, Math.min(1, mouse.x / width)) }
+                    }
+                }
             }
         }
     }

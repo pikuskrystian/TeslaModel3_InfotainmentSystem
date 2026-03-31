@@ -11,5 +11,23 @@
         <file>ui/assets/defrostFront.png</file>
         <file>ui/assets/open_locker.png</file>
         <file>ui/assets/tesla_model_3.glb</file>
+        <file>ui/assets/next.png</file>
+        <file>ui/assets/pause.png</file>
+        <file>ui/assets/play.png</file>
+        <file>ui/assets/prev.png</file>
+        <file>ui/assets/volume_down_24dp.png</file>
+        <file>ui/assets/volume_mute_24dp.png</file>
+        <file>ui/assets/volume_off_24dp.png</file>
+        <file>ui/assets/volume_up_24dp.png</file>
+        <file>ui/assets/publish.png</file>
+        <file>ui/assets/search.png</file>
+        <file>ui/assets/mobile_2.png</file>
+        <file>ui/assets/music_note.png</file>
+        <file>ui/assets/seat_heat_left.png</file>
+        <file>ui/assets/seat_heat_right.png</file>
+        <file>ui/assets/steering_wheel_heat.png</file>
+        <file>ui/assets/windshield_defrost.png</file>
+        <file>ui/assets/windshield_defrost_rear.png</file>
+        <file>ui/assets/car_icon.png</file>
     </qresource>
 </RCC>
