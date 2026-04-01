@@ -66,8 +66,8 @@ Rectangle {
             rotationScale: 1/120; property: "zoomLevel"
         }
         DragHandler { id: drag; target: null; onTranslationChanged: (delta) => map.pan(-delta.x, -delta.y) }
-        Shortcut { enabled: map.zoomLevel < map.maximumZoomLevel; sequence: StandardKey.ZoomIn;  onActivated: map.zoomLevel = Math.round(map.zoomLevel + 1) }
-        Shortcut { enabled: map.zoomLevel > map.minimumZoomLevel; sequence: StandardKey.ZoomOut; onActivated: map.zoomLevel = Math.round(map.zoomLevel - 1) }
+        Shortcut { enabled: map.zoomLevel < map.maximumZoomLevel; sequences: [StandardKey.ZoomIn];  onActivated: map.zoomLevel = Math.round(map.zoomLevel + 1) }
+        Shortcut { enabled: map.zoomLevel > map.minimumZoomLevel; sequences: [StandardKey.ZoomOut]; onActivated: map.zoomLevel = Math.round(map.zoomLevel - 1) }
     }
 
     Image {
@@ -138,7 +138,7 @@ Rectangle {
 
             // Play/Pause
             Rectangle {
-                width: 44; height: 44; radius: 22; color: "#4caf50"
+                width: 44; height: 44; radius: 22; color: "#737270"
                 scale: playMouse.containsMouse ? 1.08 : 1.0
                 Behavior on scale { NumberAnimation { duration: 120 } }
                 Image { anchors.centerIn: parent; width: 24; height: 24; source: rightScreen.playing ? "qrc:/ui/assets/pause.png" : "qrc:/ui/assets/play.png"; fillMode: Image.PreserveAspectFit }
