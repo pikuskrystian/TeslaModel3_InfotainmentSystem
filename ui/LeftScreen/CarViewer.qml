@@ -5,7 +5,7 @@ import QtQuick3D.AssetUtils
 Item {
     id: root
     property real modelRotationY: -30
-    property real cameraZ: 2800
+    property real cameraZ: 2600
 
     View3D {
         id: view3d
