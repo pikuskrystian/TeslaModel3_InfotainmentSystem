@@ -18,7 +18,7 @@ Symulacja systemu infotainment Tesli Model 3 zbudowana w Qt Quick/QML. Projekt p
 
 ## 📋 Wymagania
 
-- **Qt** 5.15 lub nowszy (lub Qt 6.x)
+- **Qt** 6.2 lub nowszy (domyślnie 6.6.2)
 - **Qt Quick** 2.15
 - **Qt Location** - dla funkcji mapy
 - **Qt Positioning** - dla współrzędnych geograficznych
