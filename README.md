@@ -151,5 +151,5 @@ Ten projekt jest projektem edukacyjnym/demonstracyjnym inspirowanym interfejsem 
 - Tesla Inc. - za inspirację designem interfejsu
 - Qt Project - za framework Qt
 - OpenStreetMap - za dane mapowe
-  
+## Wersja Demo  
 ![Demo](./ui/assets/demo_tesla_cut.gif)
